@@ -1,0 +1,29 @@
+name: build-and-test
+
+on: push
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Java JDK
+        uses: actions/setup-java@v2.5.1
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Gradle Build Action
+        uses: gradle/gradle-build-action@v2.4.0
+
+      - run: make -C app build
+
+      - name: Code Climate Coverage Action
+        uses: paambaati/codeclimate-action@v3.2.0
+        env:
+          CC_TEST_REPORTER_ID: ${{secrets.TEST_REPORTER_ID}}
+          JACOCO_SOURCE_PATH: ${{github.workspace}}/app/src/main/java
+        with:
+          coverageCommand: make -C app report
+          coverageLocations: ${{github.workspace}}/app/build/reports/jacoco/test/jacocoTestReport.xml:jacoco
