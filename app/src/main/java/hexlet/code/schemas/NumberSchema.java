@@ -7,22 +7,25 @@ public class NumberSchema extends BaseSchema {
 
     @Override
     protected boolean check(Object obj) {
-        boolean isValid = obj instanceof Integer
-                || obj == null;
-        if (positive) {
-            isValid = obj instanceof Integer && ((Integer) obj) > 0
-                    || obj == null;
+        boolean isValid = obj instanceof Integer || obj == null;
+
+        if (positive
+                && !(obj instanceof Integer && ((Integer) obj) > 0 || obj == null)) {
+            isValid = false;
         }
-        if (required) {
-            isValid = obj instanceof Integer;
+        if (required
+                && !(obj instanceof Integer)) {
+            isValid = false;
         }
-        if (required && positive) {
-            isValid = obj instanceof Integer && ((Integer) obj) > 0;
+        if (required && positive
+                && !(obj instanceof Integer && ((Integer) obj) > 0)) {
+            isValid = false;
         }
-        if (rangeDefined) {
-            isValid = obj instanceof Integer
+        if (rangeDefined
+                && !(obj instanceof Integer
                     && ((Integer) obj) >= range[0]
-                    && ((Integer) obj) <= range[1];
+                    && ((Integer) obj) <= range[1])) {
+            isValid = false;
         }
         return isValid;
     }

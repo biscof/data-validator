@@ -27,18 +27,27 @@ class StringSchemaTest {
         assertTrue(result);
         result = schema.contains("ith").isValid("John Smith is a teacher");
         assertTrue(result);
-        result = schema.contains("abc").isValid("John Smith is a teacher");
+        result = schema.contains("ab").isValid("John Smith is a teacher");
         assertFalse(result);
 
         assertFalse(schema.isValid("John Smith is a teacher"));
 
+        result = schema.minLength(2).isValid("abcd");
+        assertTrue(result);
         result = schema.minLength(2).isValid("he");
-        assertTrue(result);
-        result = schema.minLength(2).isValid("hello");
-        assertTrue(result);
+        assertFalse(result);
         result = schema.minLength(2).isValid("h");
         assertFalse(result);
 
+        assertFalse(schema.isValid("John Smith is a teacher"));
+    }
+
+    @Test
+    public void stringSchemaTest2() {
+        StringSchema schema = new StringSchema();
+
+        assertFalse(schema.required().contains("").isValid(""));
         assertTrue(schema.isValid("John Smith is a teacher"));
+        assertFalse(schema.contains("j").minLength(2).isValid("he"));
     }
 }

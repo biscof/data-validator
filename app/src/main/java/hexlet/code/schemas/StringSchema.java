@@ -8,16 +8,19 @@ public class StringSchema extends BaseSchema {
 
     @Override
     protected boolean check(Object obj) {
-        boolean isValid = obj instanceof String
-                || obj == null;
-        if (required) {
-            isValid = obj instanceof String && ((String) obj).length() > 0;
+        boolean isValid = obj instanceof String || obj == null;
+
+        if (required
+                && !(obj instanceof String && ((String) obj).length() > 0)) {
+            isValid = false;
         }
-        if (contains) {
-            isValid = obj instanceof String && ((String) obj).toLowerCase().contains(stringToContain);
+        if (contains
+                && !(obj instanceof String && ((String) obj).toLowerCase().contains(stringToContain))) {
+            isValid = false;
         }
-        if (minLenSet) {
-            isValid = obj instanceof String && ((String) obj).length() >= minLen;
+        if (minLenSet
+                && !(obj instanceof String && ((String) obj).length() >= minLen)) {
+            isValid = false;
         }
         return isValid;
     }

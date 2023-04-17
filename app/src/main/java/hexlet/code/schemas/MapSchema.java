@@ -10,16 +10,16 @@ public class MapSchema extends BaseSchema {
 
     @Override
     public boolean check(Object obj) {
-        boolean isValid = obj instanceof Map
-                || obj == null;
+        boolean isValid = obj instanceof Map || obj == null;
 
-        if (required) {
-            isValid = obj instanceof Map;
+        if (required
+                && !(obj instanceof Map)) {
+            isValid = false;
         }
-        if (sizeofDefined) {
-            isValid = obj instanceof Map && ((Map<?, ?>) obj).size() == mapSize;
+        if (sizeofDefined
+                && !(obj instanceof Map && ((Map<?, ?>) obj).size() == mapSize)) {
+            isValid = false;
         }
-
         if (shapeMapDefined && obj instanceof Map) {
             isValid = checkShape(obj);
         }
@@ -28,6 +28,7 @@ public class MapSchema extends BaseSchema {
 
     private boolean checkShape(Object obj) {
         boolean isValid;
+
         for (Map.Entry<String, Object> e : ((Map<String, Object>) obj).entrySet()) {
             if (shapeMap.containsKey(e.getKey())) {
                 isValid = shapeMap.get(e.getKey()).isValid(e.getValue());
