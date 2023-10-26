@@ -3,41 +3,25 @@ package hexlet.code.schemas;
 import java.util.Map;
 
 public final class MapSchema extends BaseSchema {
-    private int mapSize;
+    private int requiredSize;
     private Map<String, BaseSchema> shapeMap;
-    private boolean sizeofDefined;
+    private boolean sizeDefined;
     private boolean shapeMapDefined;
 
     @Override
     public boolean check(Object obj) {
-        boolean isValid = obj instanceof Map || obj == null;
+        boolean isValid = isMap(obj) || obj == null;
 
-        if (required
-                && !(obj instanceof Map)) {
-            isValid = false;
+        if (required) {
+            isValid = isMap(obj);
         }
-        if (sizeofDefined
-                && !(obj instanceof Map && ((Map<?, ?>) obj).size() == mapSize)) {
-            isValid = false;
+        if (sizeDefined) {
+            isValid = isOfSize(obj, requiredSize);
         }
-        if (shapeMapDefined && obj instanceof Map) {
-            isValid = checkShape(obj);
+        if (shapeMapDefined && isMap(obj)) {
+            isValid = checkShape(obj, shapeMap);
         }
         return isValid;
-    }
-
-    private boolean checkShape(Object obj) {
-        boolean isValid;
-
-        for (Map.Entry<String, Object> e : ((Map<String, Object>) obj).entrySet()) {
-            if (shapeMap.containsKey(e.getKey())) {
-                isValid = shapeMap.get(e.getKey()).isValid(e.getValue());
-                if (!isValid) {
-                    return false;
-                }
-            }
-        }
-        return true;
     }
 
     public MapSchema required() {
@@ -46,8 +30,8 @@ public final class MapSchema extends BaseSchema {
     }
 
     public MapSchema sizeof(Integer size) {
-        this.mapSize = size;
-        this.sizeofDefined = true;
+        this.requiredSize = size;
+        this.sizeDefined = true;
         return this;
     }
 
@@ -55,5 +39,29 @@ public final class MapSchema extends BaseSchema {
         this.shapeMap = map;
         this.shapeMapDefined = true;
         return this;
+    }
+
+    private boolean isMap(Object obj) {
+        return obj instanceof Map;
+    }
+
+    private boolean isOfSize(Object obj, int mapSize) {
+        return isMap(obj) && ((Map<?, ?>) obj).size() == mapSize;
+    }
+
+    private boolean checkShape(Object obj, Map<String, BaseSchema> shapeMap) {
+        if (!isMap(obj)) {
+            return false;
+        }
+
+        Map<?, ?> validatedMap = (Map<?, ?>) obj;
+
+        for (String key : shapeMap.keySet()) {
+            if (validatedMap.containsKey(key) && !shapeMap.get(key).isValid(validatedMap.get(key))) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }
