@@ -49,15 +49,15 @@ public final class MapSchema extends BaseSchema {
         return isMap(obj) && ((Map<?, ?>) obj).size() == mapSize;
     }
 
-    private boolean checkShape(Object obj, Map<String, BaseSchema> shapeMap) {
+    private boolean checkShape(Object obj, Map<String, BaseSchema> shape) {
         if (!isMap(obj)) {
             return false;
         }
 
         Map<?, ?> validatedMap = (Map<?, ?>) obj;
 
-        for (String key : shapeMap.keySet()) {
-            if (validatedMap.containsKey(key) && !shapeMap.get(key).isValid(validatedMap.get(key))) {
+        for (String key : shape.keySet()) {
+            if (validatedMap.containsKey(key) && !shape.get(key).isValid(validatedMap.get(key))) {
                 return false;
             }
         }

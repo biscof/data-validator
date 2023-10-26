@@ -3,7 +3,7 @@ package hexlet.code.schemas;
 public final class IntegerSchema extends BaseSchema {
     private Integer[] range;
     private boolean positive;
-    private boolean rangeDefined;
+    private boolean isRangeDefined;
 
     @Override
     protected boolean check(Object obj) {
@@ -18,7 +18,7 @@ public final class IntegerSchema extends BaseSchema {
         if (required && positive && !isInteger(obj) && !isPositive(obj)) {
             isValid = false;
         }
-        if (rangeDefined && !isInRange(obj, range)) {
+        if (isRangeDefined && !isInRange(obj, range)) {
             isValid = false;
         }
         return isValid;
@@ -39,7 +39,7 @@ public final class IntegerSchema extends BaseSchema {
         if (from <= to) {
             this.range[0] = from;
             this.range[1] = to;
-            rangeDefined = true;
+            isRangeDefined = true;
         }
         return this;
     }
@@ -54,7 +54,7 @@ public final class IntegerSchema extends BaseSchema {
         return isInteger(obj) && (Integer) obj > 0 || obj == null;
     }
 
-    private boolean isInRange(Object obj, Integer[] range) {
-        return isInteger(obj) && (Integer) obj >= range[0] && (Integer) obj <= range[1];
+    private boolean isInRange(Object obj, Integer[] rng) {
+        return isInteger(obj) && (Integer) obj >= rng[0] && (Integer) obj <= rng[1];
     }
 }
