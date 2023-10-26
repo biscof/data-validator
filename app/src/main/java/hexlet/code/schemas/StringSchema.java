@@ -1,25 +1,22 @@
 package hexlet.code.schemas;
 
 public final class StringSchema extends BaseSchema {
-    private String stringToContain;
-    private int minLen;
-    private boolean contains;
-    private boolean minLenSet;
+    private String expectedSubstring;
+    private int minLength;
+    private boolean shouldContainSubstring;
+    private boolean hasMinLength;
 
     @Override
     protected boolean check(Object obj) {
-        boolean isValid = obj instanceof String || obj == null;
+        boolean isValid = isString(obj) || obj == null;
 
-        if (required
-                && !(obj instanceof String && ((String) obj).length() > 0)) {
+        if (required && isEmpty(obj)) {
             isValid = false;
         }
-        if (contains
-                && !(obj instanceof String && ((String) obj).toLowerCase().contains(stringToContain))) {
+        if (shouldContainSubstring && !containsSubstring(obj, expectedSubstring)) {
             isValid = false;
         }
-        if (minLenSet
-                && !(obj instanceof String && ((String) obj).length() >= minLen)) {
+        if (hasMinLength && !isLongEnough(obj)) {
             isValid = false;
         }
         return isValid;
@@ -31,14 +28,30 @@ public final class StringSchema extends BaseSchema {
     }
 
     public StringSchema minLength(int length) {
-        this.minLen = length;
-        this.minLenSet = true;
+        this.minLength = length;
+        this.hasMinLength = true;
         return this;
     }
 
     public StringSchema contains(String str) {
-        this.contains = true;
-        this.stringToContain = str.toLowerCase();
+        this.shouldContainSubstring = true;
+        this.expectedSubstring = str.toLowerCase();
         return this;
+    }
+
+    private boolean isString(Object obj) {
+        return obj instanceof String;
+    }
+
+    private boolean isEmpty(Object obj) {
+        return obj == null || (isString(obj) && ((String) obj).length() == 0);
+    }
+
+    private boolean containsSubstring(Object obj, String substr) {
+        return isString(obj) && ((String) obj).toLowerCase().contains(substr);
+    }
+
+    private boolean isLongEnough(Object obj) {
+        return isString(obj) && ((String) obj).length() >= minLength;
     }
 }
