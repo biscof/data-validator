@@ -34,7 +34,7 @@ class MapSchemaTest {
     public void shapeTest() {
         MapSchema schema = new MapSchema();
         StringSchema strSchema = new StringSchema();
-        NumberSchema numSchema = new NumberSchema();
+        IntegerSchema numSchema = new IntegerSchema();
         Map<String, BaseSchema> schemas = new HashMap<>();
         schemas.put("name", strSchema.required());
         schemas.put("age", numSchema.positive());

@@ -5,10 +5,10 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class NumberSchemaTest {
+class IntegerSchemaTest {
     @Test
-    public void numberSchemaTest() {
-        NumberSchema schema = new NumberSchema();
+    public void integerSchemaTest() {
+        IntegerSchema schema = new IntegerSchema();
         assertTrue(schema.isValid(null));
         assertTrue(schema.isValid(0));
         assertTrue(schema.isValid(2));
